@@ -128,8 +128,11 @@ export default function ScrollKeyboard() {
           skillPose.scale,
           skillProgress,
         ),
-        rx: 0,
-        ry: (mobile ? 0.05 : 1.05) * skillProgress,
+        // Preserve a three-quarter view on phones instead of facing the board head-on.
+        rx: mobile ? -0.08 : 0,
+        ry: mobile
+          ? gsap.utils.interpolate(-0.32, 0.5, skillProgress)
+          : 1.05 * skillProgress,
         rz: 0,
         explode: 0,
         opacity: gsap.utils.interpolate(
@@ -166,9 +169,21 @@ export default function ScrollKeyboard() {
             experienceProgress,
           ),
           scale: gsap.utils.interpolate(target.scale, size, experienceProgress),
-          rx: 0.1 * experienceProgress + Math.PI * projectProgress,
-          ry: 1.05 + 1.6 * projectProgress,
-          rz: Math.PI * projectProgress,
+          rx: gsap.utils.interpolate(
+            target.rx,
+            0.1 + Math.PI * projectProgress,
+            experienceProgress,
+          ),
+          ry: gsap.utils.interpolate(
+            target.ry,
+            1.05 + 1.6 * projectProgress,
+            experienceProgress,
+          ),
+          rz: gsap.utils.interpolate(
+            target.rz,
+            Math.PI * projectProgress,
+            experienceProgress,
+          ),
           explode: 0,
           opacity: gsap.utils.interpolate(1, 0.24, experienceProgress),
         };
