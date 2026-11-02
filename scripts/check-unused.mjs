@@ -74,6 +74,13 @@ for (const file of [...modules, ...tooling]) {
         const owners = styleOwners.get(stylesheet) || [];
         owners.push(file);
         styleOwners.set(stylesheet, owners);
+      } else if (/\.(webp|png|jpe?g|avif|svg)$/.test(specifier)) {
+        const asset = specifier.startsWith("@/")
+          ? path.resolve("src", specifier.slice(2))
+          : path.resolve(path.dirname(file), specifier);
+        dependencies.push(asset);
+        if (!fs.existsSync(asset))
+          unresolvedImports.push(`${relative(file)}: ${specifier}`);
       } else {
         const resolved = ts.resolveModuleName(
           specifier,
@@ -151,6 +158,13 @@ const unusedAssets = publicFiles
     path.relative(path.resolve("public"), file).replaceAll("\\", "/"),
   )
   .filter((file) => !referencedAssets.has(file) && !assetMetadata.has(file));
+unusedAssets.push(
+  ...sourceFiles
+    .filter(
+      (file) => /\.(webp|png|jpe?g|avif|svg)$/.test(file) && !visited.has(file),
+    )
+    .map(relative),
+);
 const missingAssets = [...referencedAssets].filter(
   (file) => !fs.existsSync(path.join(root, "public", file)),
 );

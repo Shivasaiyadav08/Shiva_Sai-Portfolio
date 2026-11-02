@@ -19,6 +19,7 @@ Open http://localhost:3000. If `.env.local` already exists, edit it instead of o
 ```text
 src/
   app/                    Pages, metadata, and global styles
+  assets/projects/        Compressed project covers imported at build time
   components/
     contact/              Contact form and email link
     effects/              Particles, cursor, and reveal animations
@@ -30,11 +31,11 @@ src/
   data/                   Editable profile, navigation, projects, and technology data
   lib/                    Formspree submission and class-name utility
 public/
-  assets/                 Used photos, project covers, logos, font, and keyboard sounds
+  assets/                 Photo, logos, font, keyboard sounds, and artwork sources
   Shiva-Sai-Resume.pdf     Resume download
   icon.svg                Site icon
 scripts/                  Source, asset, dependency, page, and keyboard checks
-tests/                    Contact submission tests
+tests/                    Contact submission, keyboard pointer, and audio tests
 ```
 
 The `app` files assemble pages. Components render the interface, `data` holds content, and `lib` holds small reusable functions. Styles sit next to the components they style; all styles use plain CSS and Tailwind.
@@ -52,14 +53,18 @@ The `app` files assemble pages. Components render the interface, `data` holds co
 | Keyboard order and descriptions                      | `src/data/keyboard.ts`                      |
 | Technology logos and key colors                      | `src/data/stack-artwork.ts`                 |
 | Photo                                                | `public/assets/profile/shiva-sai-thota.png` |
-| Project screenshots                                  | `public/assets/projects/`                   |
+| Project screenshots                                  | `src/assets/projects/`                      |
 | Resume                                               | `public/Shiva-Sai-Resume.pdf`               |
 
 Crebry, Edith, and Decentralized Stablecoin are Personal projects. Bhagyashree Ventures and GreenCost are Freelancing projects. All five use screenshots of the supplied websites.
 
+Project covers are pre-compressed WebP files, imported at build time with a small blur preview. Cards and detail dialogs share the same cached image URL, avoiding on-demand image conversion and duplicate downloads. Keep below-the-fold cards lazy-loaded; the standalone projects page loads its first cover eagerly.
+
 The keyboard keeps one Three.js scene while scrolling between sections. The complete 50-key layout uses 10 columns × 5 rows on desktop and 5 columns × 10 rows on phones. Redux is included based on the ReduxLearning project. Hovering or sliding a finger presses successive keys and plays their sounds; lifting or cancelling the gesture releases the key. Page scrolling remains available outside the keyboard. DOM controls provide keyboard access and the same touch gestures when WebGL is unavailable. Below 1024px, it becomes a translucent background in the hero. The loader waits for the first scene frame, then reveals the hero content and keyboard. Reduced-motion preferences are respected.
 
 Logo and screenshot origins are recorded in the two `sources.json` files under `public/assets/`. Keep these records when replacing or adding artwork.
+
+Keyboard audio preloads both samples into one Web Audio context. The first click, tap, or keypress anywhere on the page unlocks playback; fresh visits show “Enable sound” until the browser permits it. Muting remains in effect during later interactions. The same gesture handling retries audio after a browser interruption, without needing an off/on toggle.
 
 ## Contact form
 
@@ -94,7 +99,7 @@ npm audit --omit=dev
 
 `check:unused` checks the source import graph, stylesheet references, CSS-module classes, public assets, and runtime/development dependencies. Missing asset paths and local imports also fail the check. Artwork provenance records are explicitly retained.
 
-Typechecking validates Next.js's generated route types and separately checks application source for unused locals. Tests mock Formspree and never send email. Pointer-input tests cover touch sliding, release/cancellation, multiple fingers, mouse hover/drag, and listener cleanup.
+Typechecking validates Next.js's generated route types and separately checks application source for unused locals. Tests mock Formspree and never send email. Pointer-input tests cover touch sliding, release/cancellation, multiple fingers, mouse hover/drag, and listener cleanup. Audio tests cover initial unlocking, touch-end retries, sample playback, muting, interrupted contexts, loading failures, and cleanup.
 
 With a server running on port 3000:
 

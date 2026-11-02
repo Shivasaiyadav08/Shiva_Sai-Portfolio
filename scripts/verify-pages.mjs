@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 
 const origin = process.env.VERIFY_URL || "http://localhost:3000";
+const projectCovers = new Set();
 for (const [path, expected] of [
   [
     "/",
@@ -31,6 +32,17 @@ for (const [path, expected] of [
   const response = await fetch(new URL(path, origin));
   assert.equal(response.status, 200, path);
   const html = await response.text();
+  if (path === "/" || path === "/projects") {
+    const covers = [
+      ...html.matchAll(/src="(\/_next\/static\/media\/[^"?]+\.webp)"/g),
+    ];
+    assert.equal(
+      new Set(covers.map((match) => match[1])).size,
+      5,
+      `${path}: five static project covers`,
+    );
+    covers.forEach((match) => projectCovers.add(match[1]));
+  }
   for (const text of expected)
     assert.ok(html.includes(text), `${path}: missing ${text}`);
   assert.doesNotMatch(html, /Ferhat|ferhatolmez|ferology1317|jaxfel/);
@@ -54,15 +66,13 @@ assert.ok(
     .equals(Buffer.from("%PDF")),
 );
 console.log("PASS resume download: PDF file");
-for (const path of [
-  "/assets/projects/crebry.png",
-  "/assets/projects/edith.png",
-  "/assets/projects/stablecoin.png",
-  "/assets/projects/bhagyashree-ventures.png",
-  "/assets/projects/greencost.png",
-  "/icon.svg",
-]) {
-  assert.equal((await fetch(new URL(path, origin))).status, 200, path);
+for (const path of [...projectCovers, "/icon.svg"]) {
+  const image = await fetch(new URL(path, origin));
+  assert.equal(image.status, 200, path);
+  if (path.endsWith(".webp")) {
+    assert.match(image.headers.get("content-type") || "", /image\/webp/);
+    assert.ok((await image.arrayBuffer()).byteLength > 100, path);
+  }
 }
 console.log("PASS project covers and icon");
 const og = await fetch(new URL("/opengraph-image", origin));

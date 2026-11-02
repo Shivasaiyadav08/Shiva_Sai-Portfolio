@@ -1,3 +1,10 @@
+import type { StaticImageData } from "next/image";
+import crebryCover from "@/assets/projects/crebry.webp";
+import edithCover from "@/assets/projects/edith.webp";
+import stablecoinCover from "@/assets/projects/stablecoin.webp";
+import bhagyashreeCover from "@/assets/projects/bhagyashree-ventures.webp";
+import greencostCover from "@/assets/projects/greencost.webp";
+
 export type Project = {
   id: string;
   kind: "personal" | "freelancing";
@@ -5,7 +12,7 @@ export type Project = {
   accent: string;
   title: string;
   subtitle: string;
-  src: string;
+  src: StaticImageData;
   imageAlt: string;
   summary: string;
   stack: string[];
@@ -41,7 +48,7 @@ const projects: Project[] = [
     ],
     live: "https://crebry-research-agent.vercel.app/",
     github: "https://github.com/Shivasaiyadav08/Crebry-ResearchAgent",
-    src: "/assets/projects/crebry.png",
+    src: crebryCover,
     imageAlt: "Crebry homepage showing its evidence-backed research workspace",
   },
   {
@@ -69,7 +76,7 @@ const projects: Project[] = [
     ],
     live: "https://edith-ai-powered-manager.vercel.app/",
     github: "https://github.com/Shivasaiyadav08/Edith",
-    src: "/assets/projects/edith.png",
+    src: edithCover,
     imageAlt:
       "Edith homepage showing projects, tasks and its Ultron AI assistant",
   },
@@ -102,7 +109,7 @@ const projects: Project[] = [
     live: "https://decentralizedstablecoin.vercel.app/",
     github: "https://github.com/Shivasaiyadav08/Stable-Coin-frontend",
     contractGithub: "https://github.com/Shivasaiyadav08/Stable-Coin",
-    src: "/assets/projects/stablecoin.png",
+    src: stablecoinCover,
     imageAlt:
       "DSC Protocol homepage showing the stablecoin collateral mechanism",
   },
@@ -122,7 +129,7 @@ const projects: Project[] = [
       "Contact and pricing enquiry paths connecting visitors with the business.",
     ],
     live: "https://bvhardwares.in/",
-    src: "/assets/projects/bhagyashree-ventures.png",
+    src: bhagyashreeCover,
     imageAlt:
       "Bhagyashree Ventures homepage showing labeling products and barcode hardware",
   },
@@ -151,7 +158,7 @@ const projects: Project[] = [
       "Method and evidence pages explaining Sydney reference rates, the comparison approach and model limitations.",
     ],
     live: "https://green-cost-sydney.vercel.app/",
-    src: "/assets/projects/greencost.png",
+    src: greencostCover,
     imageAlt:
       "GreenCost homepage showing building cost comparison and an interactive house model",
   },

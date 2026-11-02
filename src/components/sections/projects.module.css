@@ -118,11 +118,16 @@
   background: #0c1020;
   text-align: left;
 }
-.cover {
-  width: 100%;
+.cover,
+.dialogCover > img {
+  /* Crop the narrow scrollbar strip captured at the screenshots' right edge. */
+  width: 101.5%;
+  max-width: none;
   height: 100%;
   object-fit: cover;
-  object-position: top center;
+  object-position: top left;
+}
+.cover {
   transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .card:hover .cover {
@@ -307,12 +312,17 @@
   max-height: 88dvh;
   padding: 28px;
   overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
   border: 1px solid hsl(var(--border));
   border-radius: 26px;
   background: hsl(var(--background));
   color: hsl(var(--foreground));
   font-family: var(--font-sans), sans-serif;
   transform: translate(-50%, -50%);
+}
+.dialogContent::-webkit-scrollbar {
+  display: none;
 }
 .dialogClose {
   position: absolute;
@@ -335,12 +345,6 @@
   border: 1px solid hsl(var(--border));
   border-radius: 16px;
   background: #0c1020;
-}
-.dialogCover > img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top center;
 }
 .dialogTitle {
   font-size: clamp(25px, 4vw, 36px);

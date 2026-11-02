@@ -19,6 +19,7 @@ import styles from "./tech-keyboard.module.css";
 import type { KeyboardMotion } from "./types";
 import { usePreloader } from "../preloader/context";
 import { bindKeyboardPointers } from "./pointer-input";
+import { createKeyboardSound } from "./keyboard-sound";
 const KeyboardScene = dynamic(() => import("./keyboard-scene"), { ssr: false });
 
 export default function TechKeyboard({
@@ -47,39 +48,41 @@ export default function TechKeyboard({
     completeScene.current?.();
   }, []);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [audioReady, setAudioReady] = useState(false);
   const soundEnabledRef = useRef(true);
-  const currentPress = useRef<string | null>(null);
-  const pressAudio = useRef<HTMLAudioElement>(null);
-  const releaseAudio = useRef<HTMLAudioElement>(null);
+  const soundRef = useRef<ReturnType<typeof createKeyboardSound> | null>(null);
   const handlePress = useCallback((id: string | null) => {
-    if (currentPress.current === id) return;
-    const hadPress = currentPress.current !== null;
-    currentPress.current = id;
     setPressedId(id);
-    if (!soundEnabledRef.current || (!id && !hadPress)) return;
-    const audio = id ? pressAudio.current : releaseAudio.current;
-    if (id && hadPress && releaseAudio.current) {
-      releaseAudio.current.volume = 0.3;
-      releaseAudio.current.currentTime = 0;
-      void releaseAudio.current.play().catch(() => {});
-    }
-    if (audio) {
-      audio.volume = id ? 0.45 : 0.3;
-      audio.currentTime = 0;
-      void audio.play().catch(() => {
-        /* Sound may be disabled by the browser. */
-      });
-    }
+    soundRef.current?.press(id);
   }, []);
   useEffect(() => {
-    const press = pressAudio.current;
-    const release = releaseAudio.current;
+    const sound = createKeyboardSound(
+      new AudioContext({ latencyHint: "interactive" }),
+      setAudioReady,
+    );
+    sound.setEnabled(soundEnabledRef.current);
+    soundRef.current = sound;
+    const unlock = (event: Event) => {
+      if (!event.isTrusted) return;
+      // The toggle handles its own gesture so its first click enables sound.
+      if (
+        event.target instanceof Element &&
+        event.target.closest("[data-keyboard-sound-toggle]")
+      )
+        return;
+      sound.unlock();
+    };
     const cancel = () => handlePress(null);
+    const events = ["pointerdown", "pointerup", "click", "keydown"];
+    events.forEach((event) => document.addEventListener(event, unlock, true));
     window.addEventListener("blur", cancel);
     return () => {
+      events.forEach((event) =>
+        document.removeEventListener(event, unlock, true),
+      );
       window.removeEventListener("blur", cancel);
-      press?.pause();
-      release?.pause();
+      soundRef.current = null;
+      sound.dispose();
     };
   }, [handlePress]);
   const keysRef = useRef<HTMLDivElement>(null);
@@ -115,40 +118,36 @@ export default function TechKeyboard({
       data-mobile-columns={KEYBOARD_MOBILE_COLUMNS}
       data-tech-keyboard="shared"
       data-stack-count={KEYBOARD_STACK.length}
+      data-audio-state={
+        !soundEnabled ? "muted" : audioReady ? "ready" : "locked"
+      }
       data-renderer={
         sceneReady ? "webgl" : sceneStatus === "failed" ? "fallback" : "loading"
       }
     >
-      <audio
-        ref={pressAudio}
-        src="/assets/keycap-sounds/press.mp3"
-        preload="auto"
-        data-keyboard-audio="press"
-      />
-      <audio
-        ref={releaseAudio}
-        src="/assets/keycap-sounds/release.mp3"
-        preload="auto"
-        data-keyboard-audio="release"
-      />
       <button
         type="button"
         className={styles.soundToggle}
+        data-keyboard-sound-toggle
         aria-label={
-          soundEnabled ? "Mute keyboard sounds" : "Enable keyboard sounds"
+          soundEnabled && audioReady
+            ? "Mute keyboard sounds"
+            : "Enable keyboard sounds"
         }
-        aria-pressed={soundEnabled}
+        aria-pressed={soundEnabled && audioReady}
         onClick={() => {
-          const next = !soundEnabledRef.current;
+          const next = !soundEnabledRef.current || !audioReady;
           soundEnabledRef.current = next;
           setSoundEnabled(next);
-          if (!next) {
-            pressAudio.current?.pause();
-            releaseAudio.current?.pause();
-          }
+          soundRef.current?.setEnabled(next);
+          if (next) soundRef.current?.unlock();
         }}
       >
-        {soundEnabled ? "♪ Sound on" : "♪ Sound off"}
+        {soundEnabled
+          ? audioReady
+            ? "♪ Sound on"
+            : "♪ Enable sound"
+          : "♪ Sound off"}
       </button>
       {sceneStatus === "loading" && (
         <div className={styles.scenePlaceholder} role="status">

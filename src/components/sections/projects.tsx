@@ -27,10 +27,6 @@ export function ProjectGrid({
   const visible = projects.filter(
     (project) => filter === "all" || project.kind === filter,
   );
-  const coverSizes =
-    visible.length === 2
-      ? "(max-width: 640px) 100vw, 50vw"
-      : "(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw";
 
   return (
     <div className={styles.collection}>
@@ -79,7 +75,6 @@ export function ProjectGrid({
           <ProjectCard
             key={project.id}
             project={project}
-            coverSizes={coverSizes}
             eagerImage={eagerFirstImage && index === 0}
           />
         ))}
@@ -93,11 +88,9 @@ export function ProjectGrid({
 
 function ProjectCard({
   project,
-  coverSizes,
   eagerImage,
 }: {
   project: Project;
-  coverSizes: string;
   eagerImage: boolean;
 }) {
   const accent = { "--project-accent": project.accent } as CSSProperties;
@@ -114,9 +107,8 @@ function ProjectCard({
           <Image
             src={project.src}
             alt={project.imageAlt}
-            width={1280}
-            height={800}
-            sizes={coverSizes}
+            unoptimized
+            placeholder="blur"
             loading={eagerImage ? "eager" : "lazy"}
             className={styles.cover}
           />
@@ -168,9 +160,9 @@ function ProjectCard({
             <Image
               src={project.src}
               alt={project.imageAlt}
-              width={1280}
-              height={800}
-              sizes="(max-width: 768px) 100vw, 800px"
+              unoptimized
+              placeholder="blur"
+              loading="eager"
             />
           </div>
           <div className={styles.meta}>

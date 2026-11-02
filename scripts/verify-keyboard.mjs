@@ -127,6 +127,8 @@ console.log(
   `PASS: all ${expected.length} technologies and tools appear exactly once on the shared keyboard, with no concept or template keys.`,
 );
 const assetPaths = [
+  "/assets/keycap-sounds/press.mp3",
+  "/assets/keycap-sounds/release.mp3",
   ...new Set(
     [
       ...html.matchAll(/src="(\/assets\/(?:stack|keycap-sounds)\/[^"?]+)"/g),
