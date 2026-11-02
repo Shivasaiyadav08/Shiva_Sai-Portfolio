@@ -1,6 +1,6 @@
 "use client";
 
-import Particles from "@/components/particles";
+import Particles from "@/components/Particles";
 import ElasticCursor from "@/components/ui/elastic-cursor";
 
 export default function AppOverlays() {
