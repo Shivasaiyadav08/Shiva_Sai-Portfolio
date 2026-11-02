@@ -1,5 +1,5 @@
 import { config } from "@/data/config";
-import { SKILL_GROUPS, EDUCATION, CERTIFICATIONS } from "@/data/constants";
+import { SKILL_GROUPS, EDUCATION, CERTIFICATIONS } from "@/data/profile";
 import ExperienceSection from "@/components/sections/experience";
 import Image from "next/image";
 import { Mail, Phone, Linkedin, Github, FileDown } from "lucide-react";

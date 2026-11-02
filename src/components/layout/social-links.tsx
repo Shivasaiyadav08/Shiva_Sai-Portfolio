@@ -1,6 +1,6 @@
 import { Github, Linkedin } from "lucide-react";
 import { config } from "@/data/config";
-export default function SocialMediaButtons() {
+export default function SocialLinks() {
   return (
     <div className="flex items-center gap-4 z-10">
       <a

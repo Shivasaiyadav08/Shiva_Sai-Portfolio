@@ -5,15 +5,8 @@ import { AnimatePresence } from "framer-motion";
 import Loader from "./loader";
 import { PreloaderContext } from "./context";
 
-export default function Preloader({
-  children,
-  disabled = false,
-}: {
-  children: ReactNode;
-  disabled?: boolean;
-}) {
+export default function Preloader({ children }: { children: ReactNode }) {
   const [showIntro, setShowIntro] = useState(true);
-  const [introVisible, setIntroVisible] = useState(true);
   const [introFinished, setIntroFinished] = useState(false);
   const [pendingScenes, setPendingScenes] = useState(0);
   const finishIntro = useCallback(() => setIntroFinished(true), []);
@@ -38,16 +31,13 @@ export default function Preloader({
   return (
     <PreloaderContext.Provider
       value={{
-        isLoading: !disabled && introVisible,
-        canInitializeScene: disabled || introFinished,
+        isLoading: showIntro,
+        canInitializeScene: introFinished,
         registerScene,
       }}
     >
-      <AnimatePresence
-        mode="wait"
-        onExitComplete={() => setIntroVisible(false)}
-      >
-        {!disabled && showIntro && (
+      <AnimatePresence mode="wait">
+        {showIntro && (
           <Loader
             key="portfolio-intro"
             onComplete={finishIntro}

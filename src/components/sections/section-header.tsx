@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { BoxReveal } from "../reveal-animations";
+import { BoxReveal } from "../effects/reveal";
 import { ReactNode } from "react";
 
 export const SectionHeader = ({

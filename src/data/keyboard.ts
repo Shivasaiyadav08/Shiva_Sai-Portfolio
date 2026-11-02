@@ -1,4 +1,4 @@
-import { SKILL_GROUPS } from "./constants";
+import { SKILL_GROUPS } from "./profile";
 import { STACK_ARTWORK } from "./stack-artwork";
 
 const GROUP_COLORS = [
@@ -11,6 +11,8 @@ const GROUP_COLORS = [
 ];
 
 const KEY_DESCRIPTIONS: Record<string, string> = {
+  Redux:
+    "Predictable React state management with Redux Toolkit stores and slices.",
   Python: "AI research workflows and FastAPI services.",
   Java: "Programming in Java, including NPTEL certification.",
   JavaScript: "Interactive interfaces and enterprise workflows.",

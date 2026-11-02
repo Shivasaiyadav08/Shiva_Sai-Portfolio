@@ -126,6 +126,7 @@
   box-shadow: 0 0 9px #a78bfa;
 }
 .keys {
+  touch-action: none;
   display: grid;
   grid-template-columns: repeat(var(--key-columns), minmax(0, 1fr));
   gap: 10px;
@@ -165,7 +166,7 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
-.key:hover,
+.key[data-pressed="true"],
 .key:focus-visible {
   transform: translateY(4px);
   border-color: var(--key-color);
@@ -184,12 +185,6 @@
     color-mix(in srgb, var(--key-color) 35%, #303747),
     color-mix(in srgb, var(--key-color) 14%, #1b2231)
   );
-}
-.key:active {
-  transform: translateY(4px);
-  box-shadow:
-    0 1px 0 #080a11,
-    inset 0 2px 4px #0006;
 }
 .keyIcon {
   display: grid;
@@ -237,7 +232,15 @@
     min-height: 80px;
   }
 }
-@media (max-width: 639px) {
+@media (max-width: 767px) {
+  .soundToggle {
+    position: absolute;
+    right: var(--keyboard-controls-right, 0px);
+    top: 0;
+    min-height: 44px;
+    transform: scale(var(--keyboard-controls-scale, 1));
+    transform-origin: top right;
+  }
   .perspective {
     padding: 12px 0 27px;
   }

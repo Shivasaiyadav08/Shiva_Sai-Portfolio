@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { EXPERIENCE } from "@/data/constants";
+import { EXPERIENCE } from "@/data/profile";
 import { KEYBOARD_STACK } from "@/data/keyboard";
 import { SectionHeader } from "./section-header";
 import { Badge } from "../ui/badge";

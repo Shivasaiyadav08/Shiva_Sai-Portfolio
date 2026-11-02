@@ -18,6 +18,7 @@ import {
 import styles from "./tech-keyboard.module.css";
 import type { KeyboardMotion } from "./types";
 import { usePreloader } from "../preloader/context";
+import { bindKeyboardPointers } from "./pointer-input";
 const KeyboardScene = dynamic(() => import("./keyboard-scene"), { ssr: false });
 
 export default function TechKeyboard({
@@ -74,15 +75,31 @@ export default function TechKeyboard({
     const press = pressAudio.current;
     const release = releaseAudio.current;
     const cancel = () => handlePress(null);
-    window.addEventListener("pointercancel", cancel);
     window.addEventListener("blur", cancel);
     return () => {
-      window.removeEventListener("pointercancel", cancel);
       window.removeEventListener("blur", cancel);
       press?.pause();
       release?.pause();
     };
   }, [handlePress]);
+  const keysRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const target = keysRef.current;
+    if (!target || sceneStatus !== "failed") return;
+    return bindKeyboardPointers({
+      target,
+      hitTest: (event) => {
+        const key = document
+          .elementFromPoint(event.clientX, event.clientY)
+          ?.closest<HTMLElement>("[data-key-id]");
+        return key && target.contains(key) ? key.dataset.keyId || null : null;
+      },
+      onKeyChange: (id) => {
+        if (id) setSelectedId(id);
+        handlePress(id);
+      },
+    });
+  }, [sceneStatus, handlePress]);
   const selected = KEYBOARD_STACK.find((skill) => skill.id === selectedId);
 
   return (
@@ -163,6 +180,7 @@ export default function TechKeyboard({
             </span>
           </div>
           <div
+            ref={keysRef}
             className={styles.keys}
             role="group"
             aria-label={`Explore all ${KEYBOARD_STACK.length} technologies and tools`}
@@ -177,15 +195,19 @@ export default function TechKeyboard({
                   aria-label={skill.name}
                   aria-pressed={selectedId === skill.id}
                   title={`${skill.name} · ${skill.group}`}
-                  onPointerEnter={() => {
+                  onPointerEnter={(event) => {
+                    if (event.pointerType !== "mouse") return;
                     setSelectedId(skill.id);
                     handlePress(skill.id);
                   }}
-                  onPointerLeave={() => handlePress(null)}
+                  onPointerLeave={(event) => {
+                    if (event.pointerType === "mouse") handlePress(null);
+                  }}
                   onFocus={() => setSelectedId(skill.id)}
                   onClick={() => setSelectedId(skill.id)}
                   onPointerDown={(event) => {
-                    if (event.button === 0) handlePress(skill.id);
+                    if (event.pointerType === "mouse" && event.button === 0)
+                      handlePress(skill.id);
                   }}
                   onKeyDown={(event) => {
                     if (
@@ -197,6 +219,8 @@ export default function TechKeyboard({
                   onKeyUp={() => handlePress(null)}
                   onBlur={() => handlePress(null)}
                   data-tech-key={skill.name}
+                  data-key-id={skill.id}
+                  data-pressed={pressedId === skill.id}
                 >
                   <span className={styles.keyIcon} aria-hidden="true">
                     {skill.logo ? (
@@ -241,8 +265,8 @@ export default function TechKeyboard({
             </span>
             <span className={styles.selectedDescription}>
               {sceneReady
-                ? "Drag to rotate. Hover a key to explore."
-                : "Hover, tap, or focus a key to explore."}
+                ? "Hover or slide across keys. Use a mouse to rotate."
+                : "Hover, slide, tap, or focus a key to explore."}
             </span>
           </>
         )}

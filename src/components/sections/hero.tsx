@@ -3,8 +3,8 @@ import Image from "next/image";
 import { config } from "@/data/config";
 import { FileDown, ArrowUpRight, MapPin } from "lucide-react";
 import { Github, Linkedin } from "lucide-react";
-import { BlurIn } from "../reveal-animations";
-import ScrollDownIcon from "../scroll-down-icon";
+import { IntroReveal } from "../effects/reveal";
+import ScrollDownIcon from "../effects/scroll-down";
 export default function HeroSection() {
   return (
     <section
@@ -12,7 +12,7 @@ export default function HeroSection() {
       className="relative w-full min-h-[100svh] grid items-center gap-6 lg:gap-12 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] px-6 md:px-12 lg:px-16 pt-32 pb-24 max-w-[1800px] mx-auto"
     >
       <div className="relative z-10 min-w-0">
-        <BlurIn delay={0.2}>
+        <IntroReveal delay={0.25}>
           <div className="flex items-center gap-5 mb-6">
             <div className="shrink-0 rounded-[24px] border border-violet-400/30 bg-gradient-to-br from-violet-500/20 to-cyan-500/10 p-1.5 shadow-lg shadow-violet-500/5">
               <Image
@@ -29,8 +29,8 @@ export default function HeroSection() {
               Software Engineer
             </p>
           </div>
-        </BlurIn>
-        <BlurIn delay={0.35}>
+        </IntroReveal>
+        <IntroReveal delay={0.38}>
           <h1
             aria-label={config.author}
             className="text-[clamp(3rem,5.2vw,6rem)] leading-[1] tracking-tight font-display"
@@ -39,8 +39,8 @@ export default function HeroSection() {
             <br />
             Thota<span className="text-violet-500">.</span>
           </h1>
-        </BlurIn>
-        <BlurIn delay={0.5}>
+        </IntroReveal>
+        <IntroReveal delay={0.5}>
           <p className="font-sans text-lg sm:text-xl mt-7 text-muted-foreground">
             {config.focus}
           </p>
@@ -52,8 +52,11 @@ export default function HeroSection() {
             <MapPin size={14} />
             {config.location}
           </p>
-        </BlurIn>
-        <div className="font-sans mt-8 flex flex-wrap items-center gap-3">
+        </IntroReveal>
+        <IntroReveal
+          delay={0.62}
+          className="font-sans mt-8 flex flex-wrap items-center gap-3"
+        >
           <a
             href={config.resume}
             download
@@ -85,7 +88,7 @@ export default function HeroSection() {
           >
             <Linkedin size={20} />
           </a>
-        </div>
+        </IntroReveal>
       </div>
       <div
         data-keyboard-slot="hero"
@@ -93,7 +96,9 @@ export default function HeroSection() {
         aria-hidden="true"
       />
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <ScrollDownIcon />
+        <IntroReveal delay={0.75}>
+          <ScrollDownIcon />
+        </IntroReveal>
       </div>
     </section>
   );

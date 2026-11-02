@@ -9,6 +9,10 @@
   will-change: transform;
   --keyboard-height: 740px;
 }
+.entrance {
+  width: 100%;
+  height: 100%;
+}
 .floating[data-interactive="false"],
 .floating[data-interactive="false"] * {
   pointer-events: none !important;

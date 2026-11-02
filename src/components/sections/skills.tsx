@@ -6,8 +6,12 @@ export default function SkillsSection() {
       <SectionHeader
         id="skills"
         title="Stack & Tools"
-        desc={`${KEYBOARD_STACK.length} technologies and tools I build with. Hover a key to explore.`}
+        desc={`${KEYBOARD_STACK.length} technologies and tools I build with. Hover or slide across the keys to explore.`}
       />
+      <p className="mb-4 px-6 text-center text-xs text-muted-foreground md:hidden">
+        Slide across keys to press them. Scroll outside the keyboard to
+        continue.
+      </p>
       <div className="max-w-[1360px] mx-auto px-4 md:px-8">
         <div
           data-keyboard-slot="skills"

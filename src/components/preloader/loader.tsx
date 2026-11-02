@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { config } from "@/data/config";
-import styles from "./style.module.scss";
+import styles from "./loader.module.css";
 
 export default function Loader({
   onComplete,

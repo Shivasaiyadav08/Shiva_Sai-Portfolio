@@ -4,8 +4,8 @@ import ts from "typescript";
 
 // Read the real resume skill list instead of maintaining a second test list.
 const source = ts.createSourceFile(
-  "constants.ts",
-  await readFile(new URL("../src/data/constants.ts", import.meta.url), "utf8"),
+  "profile.ts",
+  await readFile(new URL("../src/data/profile.ts", import.meta.url), "utf8"),
   ts.ScriptTarget.Latest,
   true,
 );
@@ -47,8 +47,8 @@ expected = [
 ].filter((name) => !concepts.includes(name));
 assert.equal(
   expected.length,
-  49,
-  "The requested stack contains 49 distinct technologies",
+  50,
+  "The requested stack contains 50 distinct technologies",
 );
 assert.ok(expected.length > 0, "Resume skills must be found");
 assert.deepEqual(
@@ -90,11 +90,16 @@ assert.deepEqual(
   expected,
   "Hero must follow languages → databases → full stack → AI → blockchain",
 );
-assert.equal(expected.length % 7, 0, "Desktop grid must have no empty keys");
+assert.equal(expected.length % 10, 0, "Desktop grid must have no empty keys");
 assert.equal(
-  expected.length % 7,
+  expected.length % 5,
   0,
   "Mobile WebGL grid must have no empty keys",
+);
+assert.ok(html.includes('data-columns="10"'), "Desktop uses ten full columns");
+assert.ok(
+  html.includes('data-mobile-columns="5"'),
+  "Phones use five full columns",
 );
 assert.equal([...html.matchAll(/data-tech-keyboard="shared"/g)].length, 1);
 assert.equal([...html.matchAll(/data-keyboard-slot="hero"/g)].length, 1);

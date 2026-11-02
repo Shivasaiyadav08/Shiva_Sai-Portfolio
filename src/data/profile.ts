@@ -16,6 +16,7 @@ export const SKILL_GROUPS = [
       "CodeIgniter",
       "Tailwind CSS",
       "Zustand",
+      "Redux",
       "Three.js",
       "Supabase",
       "Mongoose",
@@ -106,7 +107,7 @@ export const EXPERIENCE: Experience[] = [
     company: "Independent developer community",
     description: [
       "Developed an AI-powered research application for a client in Sydney, using LangGraph orchestration, RAG, Tavily web search, and AI-based research synthesis.",
-      "Built a responsive business website using Next.js and Tailwind CSS; contributed to CRM application development.",
+      "Built a responsive business website using Next.js and Tailwind CSS.",
       "Coordinated the community development team, organizing contributions across software projects.",
     ],
     skills: ["LangGraph", "Python", "Next.js", "Tailwind CSS"],

@@ -20,6 +20,7 @@ export const STACK_ARTWORK: Record<
   CSS: { file: "css.svg", color: "#07528e" },
   "Tailwind CSS": { file: "tailwind.svg", color: "#064d5f" },
   Zustand: { file: "zustand.svg", color: "#f0d5ac" },
+  Redux: { file: "redux.svg", color: "#e6d9fa" },
   "Three.js": { file: "threejs.svg", color: "#e8e6df" },
   LangGraph: { file: "langgraph.svg", color: "#bde4cb" },
   LangChain: { file: "langchain.svg", color: "#c9e5d6" },

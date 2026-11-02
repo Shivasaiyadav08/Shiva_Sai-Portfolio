@@ -1,4 +1,4 @@
-export const links = [
+export const navigationLinks = [
   { title: "Home", href: "/#hero", description: "Back to the introduction" },
   { title: "About", href: "/about", description: "My background and approach" },
   {
@@ -23,3 +23,7 @@ export const links = [
   },
   { title: "Contact", href: "/#contact", description: "Start a conversation" },
 ];
+
+export const footerLinks = navigationLinks.filter(({ href }) =>
+  ["/about", "/#projects"].includes(href),
+);

@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { Inter, Archivo_Black } from "next/font/google";
 import "./globals.css";
 import { config } from "@/data/config";
-import Header from "@/components/header/header";
-import Footer from "@/components/footer/footer";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
 import Script from "next/script";
-import AppOverlays from "@/components/app-overlays";
-import { Providers } from "@/components/providers";
+import BackgroundEffects from "@/components/layout/background-effects";
+import { Providers } from "@/components/layout/providers";
 export const metadata: Metadata = {
   metadataBase: new URL(config.site || "http://localhost:3000"),
   title: config.title,
@@ -55,7 +55,7 @@ export default function RootLayout({
           <Header />
           <div id="main-content">{children}</div>
           <Footer />
-          <AppOverlays />
+          <BackgroundEffects />
         </Providers>
         {process.env.UMAMI_DOMAIN && process.env.UMAMI_SITE_ID && (
           <Script

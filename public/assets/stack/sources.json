@@ -45,5 +45,6 @@
   "chainlink.svg": "https://simpleicons.org/?q=chainlink (react-icons/si)",
   "render.svg": "https://simpleicons.org/?q=render (react-icons/si)",
   "clerk.svg": "https://simpleicons.org/?q=clerk (react-icons/si)",
-  "alchemy.svg": "https://simpleicons.org/?q=alchemy (react-icons/si)"
+  "alchemy.svg": "https://simpleicons.org/?q=alchemy (react-icons/si)",
+  "redux.svg": "https://raw.githubusercontent.com/reduxjs/redux/master/logo/logo.svg"
 }

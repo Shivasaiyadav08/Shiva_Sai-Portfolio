@@ -12,18 +12,18 @@
   color: hsl(var(--foreground));
   font-family: var(--font-sans), sans-serif;
   will-change: transform;
+}
 
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(
-      ellipse at 50% 42%,
-      rgb(139 92 246 / 13%),
-      transparent 55%
-    );
-  }
+.introduction::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 42%,
+    rgb(139 92 246 / 13%),
+    transparent 55%
+  );
 }
 
 .topline,

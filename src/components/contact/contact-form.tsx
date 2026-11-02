@@ -4,9 +4,9 @@ import { useId, useState, type FormEvent } from "react";
 import { ChevronRight, Loader2 } from "lucide-react";
 import { config } from "@/data/config";
 import { submitContact } from "@/lib/contact";
-import { Button } from "./ui/button";
-import { Input, Textarea } from "./ui/form-field";
-import { Label } from "./ui/label";
+import { Button } from "../ui/button";
+import { Input, Textarea } from "../ui/form-field";
+import { Label } from "../ui/label";
 import EmailLink from "./email-link";
 
 const formId = process.env.NEXT_PUBLIC_FORMSPREE_ID;

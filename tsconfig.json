@@ -21,7 +21,8 @@
       "@/*": ["./src/*"]
     },
     "target": "ES2017",
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "tsBuildInfoFile": ".next/cache/typescript/app.tsbuildinfo"
   },
   "include": [
     "next-env.d.ts",
@@ -31,5 +32,5 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "tmp", ".lockfile-backups"]
+  "exclude": ["node_modules", "tmp"]
 }

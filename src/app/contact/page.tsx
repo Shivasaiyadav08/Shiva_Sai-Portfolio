@@ -1,4 +1,4 @@
-import ContactForm from "@/components/contact-form";
+import ContactForm from "@/components/contact/contact-form";
 import { config } from "@/data/config";
 export const metadata = { title: "Contact | Shiva Sai Thota" };
 export default function ContactPage() {

@@ -1,5 +1,5 @@
 "use client";
-import { ReactLenis } from "@/lib/lenis";
+import { ReactLenis } from "lenis/react";
 export default function SmoothScroll({
   children,
 }: {

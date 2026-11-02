@@ -6,8 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import ContactForm from "../contact-form";
-import EmailLink from "../email-link";
+import ContactForm from "../contact/contact-form";
+import EmailLink from "../contact/email-link";
 import { SectionHeader } from "./section-header";
 import SectionWrapper from "../ui/section-wrapper";
 

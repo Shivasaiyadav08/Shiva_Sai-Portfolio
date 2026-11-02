@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "noUnusedLocals": true,
-    "incremental": false
+    "tsBuildInfoFile": ".next/cache/typescript/source.tsbuildinfo"
   },
   "include": [
     "next-env.d.ts",

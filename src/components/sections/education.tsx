@@ -1,4 +1,4 @@
-import { CERTIFICATIONS, EDUCATION } from "@/data/constants";
+import { CERTIFICATIONS, EDUCATION } from "@/data/profile";
 import SectionWrapper from "../ui/section-wrapper";
 import { SectionHeader } from "./section-header";
 

@@ -4,11 +4,11 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowUpRight, FileDown, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useLenis } from "@/lib/lenis";
+import { useLenis } from "lenis/react";
 import { config } from "@/data/config";
-import ThemeToggle from "../theme/theme-toggle";
-import { links } from "./config";
-import styles from "./style.module.scss";
+import ThemeToggle from "@/components/layout/theme-toggle";
+import { navigationLinks } from "@/data/navigation";
+import styles from "./header.module.css";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -103,7 +103,7 @@ export default function Header() {
                   </Dialog.Close>
                 </div>
                 <nav aria-label="Main navigation" className={styles.navigation}>
-                  {links.map((link, index) => (
+                  {navigationLinks.map((link, index) => (
                     <Link
                       key={link.href}
                       href={link.href}

@@ -1,9 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
+import { usePreloader } from "../preloader/context";
 
-export function BlurIn({
+export function IntroReveal({
   children,
   className,
   delay = 0,
@@ -12,12 +13,25 @@ export function BlurIn({
   className?: string;
   delay?: number;
 }) {
+  const { isLoading } = usePreloader();
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.div
-      initial={{ filter: "blur(10px)", opacity: 0 }}
-      animate={{ filter: "blur(0px)", opacity: 1 }}
-      transition={{ duration: 1, delay }}
+      initial={{ opacity: 0, y: 24 }}
+      animate={{
+        opacity: isLoading ? 0 : 1,
+        y: isLoading && !reduceMotion ? 24 : 0,
+      }}
+      transition={{
+        duration: reduceMotion ? 0.15 : 0.85,
+        delay: isLoading || reduceMotion ? 0 : delay,
+        ease: [0.22, 1, 0.36, 1],
+      }}
       className={className}
+      style={{ willChange: "transform, opacity" }}
+      inert={isLoading}
+      data-intro-reveal={isLoading ? "waiting" : "ready"}
     >
       {children}
     </motion.div>
@@ -39,6 +53,7 @@ export function BoxReveal({
       viewport={{ once: true }}
     >
       <motion.div
+        style={{ willChange: "transform, opacity" }}
         variants={{
           hidden: { opacity: 0, y: 75 },
           visible: { opacity: 1, y: 0 },

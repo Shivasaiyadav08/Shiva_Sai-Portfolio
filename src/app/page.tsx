@@ -1,4 +1,4 @@
-import SmoothScroll from "@/components/smooth-scroll";
+import SmoothScroll from "@/components/layout/smooth-scroll";
 import SkillsSection from "@/components/sections/skills";
 import ExperienceSection from "@/components/sections/experience";
 import ProjectsSection from "@/components/sections/projects";

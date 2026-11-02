@@ -4,12 +4,7 @@ import parser from "@typescript-eslint/parser";
 import hooks from "eslint-plugin-react-hooks";
 
 export default defineConfig([
-  globalIgnores([
-    ".next/**",
-    "node_modules/**",
-    "next-env.d.ts",
-    "tmp/**",
-  ]),
+  globalIgnores([".next/**", "node_modules/**", "next-env.d.ts", "tmp/**"]),
   {
     files: ["src/**/*.{ts,tsx}"],
     languageOptions: {

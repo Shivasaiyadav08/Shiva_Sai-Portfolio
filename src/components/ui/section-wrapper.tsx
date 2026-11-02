@@ -8,7 +8,12 @@ interface SectionWrapperProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
 }
 
-const SectionWrapper = ({ id, className, children, ...props }: SectionWrapperProps) => {
+const SectionWrapper = ({
+  id,
+  className,
+  children,
+  ...props
+}: SectionWrapperProps) => {
   const containerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -16,7 +21,11 @@ const SectionWrapper = ({ id, className, children, ...props }: SectionWrapperPro
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
+  const scale = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0.8, 1, 1, 0.8],
+  );
 
   return (
     <section
@@ -25,10 +34,7 @@ const SectionWrapper = ({ id, className, children, ...props }: SectionWrapperPro
       className={cn("relative", className)}
       {...props}
     >
-      <motion.div
-        style={{ opacity, scale }}
-        className="w-full h-full"
-      >
+      <motion.div style={{ opacity, scale }} className="w-full h-full">
         {children}
       </motion.div>
     </section>

@@ -7,6 +7,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { FontLoader, type Font } from "three/addons/loaders/FontLoader.js";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import type { KeyboardMotion } from "./types";
+import { bindKeyboardPointers } from "./pointer-input";
 import {
   KEYBOARD_COLUMNS,
   KEYBOARD_MOBILE_COLUMNS,
@@ -107,8 +108,6 @@ export default function KeyboardScene({
     let visible = true;
     let selected: string | null = null;
     let pressed: string | null = null;
-    let hovered: string | null = null;
-    let pointerStart: { x: number; y: number } | null = null;
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({
@@ -129,7 +128,7 @@ export default function KeyboardScene({
     renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.domElement.setAttribute(
       "aria-label",
-      `Interactive 3D keyboard with ${KEYBOARD_STACK.length} raised technology keys. Hover to press; drag to rotate.`,
+      `Interactive 3D keyboard with ${KEYBOARD_STACK.length} raised technology keys. Hover or slide to press; drag with a mouse to rotate.`,
     );
     renderer.domElement.setAttribute("role", "img");
     renderer.domElement.dataset.geometry = "rounded-solid-keycaps";
@@ -152,9 +151,6 @@ export default function KeyboardScene({
     controls.maxPolarAngle = 1.25;
     controls.minAzimuthAngle = -0.8;
     controls.maxAzimuthAngle = 0.8;
-    // Vertical page scrolling remains native on touch screens; keys still respond to taps.
-    controls.touches.ONE = THREE.TOUCH.PAN;
-    controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
 
     scene.add(new THREE.HemisphereLight(0xe4edff, 0x131721, 1.45));
     const light = new THREE.DirectionalLight(0xffffff, 3.0);
@@ -216,9 +212,9 @@ export default function KeyboardScene({
     const board = new THREE.Group();
     model.add(board);
 
-    const createLayout = (width: number) => {
+    const createLayout = () => {
       const nextColumns =
-        width < 520 ? KEYBOARD_MOBILE_COLUMNS : KEYBOARD_COLUMNS;
+        window.innerWidth < 768 ? KEYBOARD_MOBILE_COLUMNS : KEYBOARD_COLUMNS;
       if (columns === nextColumns) return;
       columns = nextColumns;
       const rows = Math.ceil(KEYBOARD_STACK.length / columns);
@@ -455,12 +451,13 @@ export default function KeyboardScene({
     const fitCamera = () => {
       const { width, height } = host.getBoundingClientRect();
       if (!width || !height) return;
-      createLayout(width);
+      createLayout();
       renderer.setSize(width, height, false);
       viewportAspect = width / height;
       const target = new THREE.Vector3(0, 0.25, 0);
+      const mobile = window.innerWidth < 768;
       camera.position
-        .set(5.5, 12, 16)
+        .set(mobile ? 0.5 : 5.5, mobile ? 16 : 12, mobile ? 10 : 16)
         .normalize()
         .multiplyScalar(24)
         .add(target);
@@ -506,51 +503,23 @@ export default function KeyboardScene({
         false,
       )[0]?.object.userData.skillId as string | undefined;
     };
-    const move = (event: PointerEvent) => {
-      if (
-        pointerStart &&
-        Math.hypot(
-          event.clientX - pointerStart.x,
-          event.clientY - pointerStart.y,
-        ) > 5
-      )
-        return;
-      const id = hitKey(event);
-      renderer.domElement.style.cursor = id ? "pointer" : "grab";
-      if ((id || null) !== hovered) {
-        hovered = pressed = id || null;
+    const unbindPointers = bindKeyboardPointers({
+      target: renderer.domElement,
+      hitTest: (event) => hitKey(event) || null,
+      onKeyChange: (id) => {
+        pressed = id;
         if (id) {
           selected = id;
           onSelect(id);
           updateDescription();
         }
-        onPress(pressed);
-        setTargets();
-      }
-    };
-    const down = (event: PointerEvent) => {
-      if (event.button !== 0) return;
-      pointerStart = { x: event.clientX, y: event.clientY };
-      const id = hitKey(event);
-      if (id) {
-        selected = pressed = id;
-        onSelect(id);
         onPress(id);
         setTargets();
-      }
-    };
-    const up = () => {
-      if (!pointerStart) return;
-      pointerStart = null;
-      pressed = hovered;
-      onPress(hovered);
-      setTargets();
-    };
-    const leave = () => {
-      hovered = pressed = null;
-      onPress(null);
-      setTargets();
-    };
+      },
+      onTouchChange: (active) => {
+        controls.enabled = !active;
+      },
+    });
     const lost = (event: Event) => {
       event.preventDefault();
       contextLost = true;
@@ -563,13 +532,8 @@ export default function KeyboardScene({
       contextLost = false;
       invalidate();
     };
-    renderer.domElement.addEventListener("pointermove", move);
-    renderer.domElement.addEventListener("pointerdown", down);
-    renderer.domElement.addEventListener("pointerleave", leave);
     renderer.domElement.addEventListener("webglcontextlost", lost);
     renderer.domElement.addEventListener("webglcontextrestored", restored);
-    window.addEventListener("pointerup", up);
-    window.addEventListener("pointercancel", up);
 
     const resize = new ResizeObserver(fitCamera);
     resize.observe(host);
@@ -660,15 +624,11 @@ export default function KeyboardScene({
       cancelAnimationFrame(frame);
       resize.disconnect();
       intersection.disconnect();
+      unbindPointers();
       controls.removeEventListener("change", invalidate);
       controls.dispose();
-      renderer.domElement.removeEventListener("pointermove", move);
-      renderer.domElement.removeEventListener("pointerdown", down);
-      renderer.domElement.removeEventListener("pointerleave", leave);
       renderer.domElement.removeEventListener("webglcontextlost", lost);
       renderer.domElement.removeEventListener("webglcontextrestored", restored);
-      window.removeEventListener("pointerup", up);
-      window.removeEventListener("pointercancel", up);
       const geometries = new Set<THREE.BufferGeometry>();
       const materials = new Set<THREE.Material>();
       scene.traverse((object) => {
