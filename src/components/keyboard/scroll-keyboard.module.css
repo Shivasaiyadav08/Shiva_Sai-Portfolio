@@ -1,0 +1,18 @@
+.floating {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 1000px;
+  height: 800px;
+  z-index: 5;
+  transform-origin: top left;
+  will-change: transform;
+  --keyboard-height: 740px;
+}
+.floating[data-interactive="false"],
+.floating[data-interactive="false"] * {
+  pointer-events: none !important;
+}
+.floating[data-interactive="false"] button {
+  visibility: hidden;
+}

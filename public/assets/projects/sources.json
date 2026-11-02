@@ -1,0 +1,30 @@
+{
+  "capturedOn": "2026-11-02",
+  "covers": [
+    {
+      "file": "crebry.png",
+      "type": "website screenshot",
+      "source": "https://crebry-research-agent.vercel.app/"
+    },
+    {
+      "file": "edith.png",
+      "type": "website screenshot",
+      "source": "https://edith-ai-powered-manager.vercel.app/"
+    },
+    {
+      "file": "stablecoin.png",
+      "type": "website screenshot",
+      "source": "https://decentralizedstablecoin.vercel.app/"
+    },
+    {
+      "file": "bhagyashree-ventures.png",
+      "type": "website screenshot",
+      "source": "https://bvhardwares.in/"
+    },
+    {
+      "file": "greencost.png",
+      "type": "website screenshot",
+      "source": "https://green-cost-sydney.vercel.app/"
+    }
+  ]
+}

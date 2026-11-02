@@ -1,0 +1,38 @@
+.viewport {
+  position: relative;
+  width: 100%;
+  height: var(--keyboard-height, clamp(420px, 56vw, 730px));
+  pointer-events: auto;
+}
+.canvasHost {
+  position: absolute;
+  inset: 0;
+}
+.canvasHost canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: pan-y !important;
+}
+.reset {
+  position: absolute;
+  right: 16px;
+  bottom: 8px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 20px;
+  padding: 7px 12px;
+  background: hsl(var(--background) / 0.8);
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+.reset:hover,
+.reset:focus-visible {
+  color: hsl(var(--foreground));
+  outline: 2px solid #a78bfa;
+  outline-offset: 3px;
+}
+@media (max-width: 639px) {
+  .viewport {
+    height: var(--keyboard-height, 580px);
+  }
+}
