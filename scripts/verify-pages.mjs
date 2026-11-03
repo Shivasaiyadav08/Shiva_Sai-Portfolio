@@ -10,7 +10,7 @@ for (const [path, expected] of [
       "Crebry",
       "Edith",
       "Karat Infinity",
-      "Independent developer community",
+      "Independent Development Team",
       "8.62",
     ],
   ],
