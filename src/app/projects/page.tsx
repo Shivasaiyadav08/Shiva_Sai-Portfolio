@@ -1,9 +1,6 @@
 import { ProjectGrid } from "@/components/sections/projects";
-export const metadata = {
-  title: "Projects | Shiva Sai Thota",
-  description:
-    "Personal projects and freelance websites by Shiva Sai Thota: AI, SaaS, blockchain, Bhagyashree Ventures, and GreenCost.",
-};
+import { pageMetadata } from "@/lib/seo";
+export const metadata = pageMetadata("/projects");
 export default function ProjectsPage() {
   return (
     <main className="max-w-7xl mx-auto px-4 pt-32 pb-20 min-h-screen font-sans">

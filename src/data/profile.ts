@@ -115,7 +115,7 @@ export const EXPERIENCE: Experience[] = [
 ];
 export const EDUCATION = {
   institution: "J.B. Institute of Engineering & Technology",
-  dates: "2023 – 2026",
+  dates: "2026",
   degree: "Bachelor of Technology, Computer Science and Engineering",
   specialization: "AI & ML specialization",
   university: "Jawaharlal Nehru Technological University",

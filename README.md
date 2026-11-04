@@ -80,7 +80,9 @@ Official setup: https://formspree.io/html/
 
 ## Optional settings
 
-- `NEXT_PUBLIC_SITE_URL`: production origin used in social metadata.
+- `NEXT_PUBLIC_SITE_URL=https://shivasai.is-a.dev`: canonical production origin. Missing, malformed, or different origins fall back to this domain; Vercel aliases cannot leak into metadata.
+- `GOOGLE_SITE_VERIFICATION`: optional Google HTML-tag verification token (the `content` value only).
+- `BING_SITE_VERIFICATION`: optional Bing HTML-tag verification token (the `content` value only).
 - `UMAMI_DOMAIN` and `UMAMI_SITE_ID`: analytics, enabled only when both are set.
 
 Public environment values are included during the build. Rebuild after changing them.
@@ -110,6 +112,34 @@ node scripts/verify-keyboard.mjs
 
 Use `npm start` to serve the production build. Real email delivery requires your Formspree form ID and recipient configuration.
 
-## Acknowledgement
+## Search indexing and deployment
 
-Adapted from Ferhat Olmez's interactive developer portfolio, with Shiva Sai Thota's content and locally hosted artwork.
+The four public pages have unique server-rendered titles, descriptions, canonical URLs, Open Graph and Twitter metadata. `/sitemap.xml` lists only those pages; `/robots.txt` allows public crawling. Sitemap entries deliberately omit unverified modification dates. The existing 1200 × 630 `/opengraph-image` is shared by all routes. JSON-LD describes the verified person, website, and About profile page.
+
+Only the old `shiva-sai.vercel.app` hostname gets a permanent redirect to `https://shivasai.is-a.dev`, preserving paths and query parameters. No `www` redirect, DNS change, or Vercel domain change is made. Other preview deployments use the primary canonical URLs; keep Vercel's preview indexing protection enabled. Canonical tags are signals, not guarantees of which URLs a search engine indexes.
+
+### Google Search Console
+
+1. In [Search Console](https://search.google.com/search-console), add a **URL-prefix** property for `https://shivasai.is-a.dev/`.
+2. Choose **HTML tag** verification. Copy only the `content` token into `GOOGLE_SITE_VERIFICATION` in Vercel's Production environment variables. Do not put an entire meta tag in the variable.
+3. Set `NEXT_PUBLIC_SITE_URL=https://shivasai.is-a.dev`, then redeploy. Verification tokens are embedded at build time. Keep the token configured after verification.
+4. View the deployed homepage HTML and confirm `google-site-verification` is present. Return to Search Console and click Verify.
+5. In **Sitemaps**, submit `https://shivasai.is-a.dev/sitemap.xml`.
+6. Use **URL Inspection → Test live URL** on Home, About, Projects, and Contact. Request indexing when the live test succeeds. Check the selected canonical and Page indexing reports after recrawling.
+
+A Domain property uses DNS verification instead of the HTML tag. No DNS changes are needed for the URL-prefix method above. See [Google's verification documentation](https://support.google.com/webmasters/answer/9008080).
+
+### Bing Webmaster Tools
+
+1. Sign in at [Bing Webmaster Tools](https://www.bing.com/webmasters/).
+2. Import the verified Search Console property, or add `https://shivasai.is-a.dev/` manually.
+3. For manual HTML-tag verification, put Bing's `msvalidate.01` content token in `BING_SITE_VERIFICATION` in Vercel Production, redeploy, then verify in Bing.
+4. Submit `https://shivasai.is-a.dev/sitemap.xml` in Bing's Sitemaps section and use URL Inspection to review the four public URLs.
+
+After deployment, check the live sitemap, robots file, canonicals, redirect from the old hostname, and preview at `/opengraph-image`. Test social sharing with LinkedIn Post Inspector and Facebook Sharing Debugger; services may cache earlier previews. Validate JSON-LD with [Schema.org Validator](https://validator.schema.org/) and [Google Rich Results Test](https://search.google.com/test/rich-results). Schema markup does not guarantee a rich result or indexing. Use PageSpeed Insights and Search Console's Core Web Vitals report for production measurements; no field-performance score is claimed by the local checks.
+
+### Contributor history
+
+The audit found seven commits on local `main`, all authored by Shivasaiyadav08. GitHub's public contributors API also returned only that account. The local `backup-main` branch contains older template history, and a stale `origin/fix/readme-server-dir` reference contains the original author's commits. Those references were preserved. A stale GitHub UI or viewing another branch/repository may explain an older contributors display; the current API does not show additional contributors.
+
+README attribution is independent of Git commit authors. This cleanup removes the optional README acknowledgement, retains artwork provenance, and does not change commit authors, delete branches, rewrite history, or force-push. No LICENSE/NOTICE file was present in the audited current or backup tree; this is not a declaration that third-party work has no attribution obligations. Preserve any applicable upstream license notices. For a contributors display that remains stale, allow GitHub's data to refresh or contact GitHub Support. Correct your own Git name/email for future commits if necessary; rewriting existing authorship or starting new history requires a separate explicit decision and can disrupt clones and PRs.

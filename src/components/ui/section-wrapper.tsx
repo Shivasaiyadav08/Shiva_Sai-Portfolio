@@ -34,7 +34,11 @@ const SectionWrapper = ({
       className={cn("relative", className)}
       {...props}
     >
-      <motion.div style={{ opacity, scale }} className="w-full h-full">
+      <motion.div
+        data-content-reveal
+        style={{ opacity, scale }}
+        className="w-full h-full"
+      >
         {children}
       </motion.div>
     </section>

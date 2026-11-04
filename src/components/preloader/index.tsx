@@ -26,6 +26,10 @@ export default function Preloader({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (introFinished && pendingScenes === 0) setShowIntro(false);
+    if (!introFinished || pendingScenes === 0) return;
+    // A stalled optional WebGL asset must not indefinitely cover the page.
+    const timeout = window.setTimeout(() => setShowIntro(false), 8000);
+    return () => window.clearTimeout(timeout);
   }, [introFinished, pendingScenes]);
 
   return (

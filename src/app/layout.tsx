@@ -7,27 +7,26 @@ import Footer from "@/components/layout/footer";
 import Script from "next/script";
 import BackgroundEffects from "@/components/layout/background-effects";
 import { Providers } from "@/components/layout/providers";
+import { pageMetadata, portfolioSchema } from "@/lib/seo";
 export const metadata: Metadata = {
-  metadataBase: new URL(config.site || "http://localhost:3000"),
-  title: config.title,
-  description: config.description.long,
+  ...pageMetadata("/"),
+  metadataBase: new URL(config.site),
   keywords: config.keywords,
   authors: [{ name: config.author }],
   icons: {
     icon: { url: "/terminal.svg", type: "image/svg+xml", sizes: "any" },
   },
-  openGraph: {
-    title: config.title,
-    description: config.description.short,
-    ...(config.site ? { url: config.site } : {}),
-    type: "website",
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION?.trim() || undefined,
+    other: process.env.BING_SITE_VERIFICATION?.trim()
+      ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION.trim() }
+      : undefined,
   },
-  twitter: {
-    card: "summary_large_image",
-    title: config.title,
-    description: config.description.short,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
-  robots: { index: true, follow: true },
 };
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const archivoBlack = Archivo_Black({
@@ -47,6 +46,18 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(portfolioSchema()).replace(/</g, "\\u003c"),
+          }}
+        />
+        <noscript>
+          <style>{`
+          [data-portfolio-intro], [data-scroll-keyboard] { display: none !important; }
+          [data-intro-reveal], [data-content-reveal] { opacity: 1 !important; transform: none !important; }
+        `}</style>
+        </noscript>
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[3000] bg-background p-3"

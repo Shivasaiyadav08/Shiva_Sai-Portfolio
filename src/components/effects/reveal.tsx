@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { usePreloader } from "../preloader/context";
 
 export function IntroReveal({
@@ -15,6 +15,8 @@ export function IntroReveal({
 }) {
   const { isLoading } = usePreloader();
   const reduceMotion = useReducedMotion();
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
 
   return (
     <motion.div
@@ -30,7 +32,7 @@ export function IntroReveal({
       }}
       className={className}
       style={{ willChange: "transform, opacity" }}
-      inert={isLoading}
+      inert={hydrated && isLoading}
       data-intro-reveal={isLoading ? "waiting" : "ready"}
     >
       {children}
@@ -53,6 +55,7 @@ export function BoxReveal({
       viewport={{ once: true }}
     >
       <motion.div
+        data-content-reveal
         style={{ willChange: "transform, opacity" }}
         variants={{
           hidden: { opacity: 0, y: 75 },

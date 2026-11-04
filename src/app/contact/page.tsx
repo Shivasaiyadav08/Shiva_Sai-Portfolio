@@ -1,6 +1,7 @@
 import ContactForm from "@/components/contact/contact-form";
 import { config } from "@/data/config";
-export const metadata = { title: "Contact | Shiva Sai Thota" };
+import { pageMetadata } from "@/lib/seo";
+export const metadata = pageMetadata("/contact");
 export default function ContactPage() {
   return (
     <main className="max-w-2xl mx-auto px-6 pt-32 pb-20 min-h-screen font-sans">

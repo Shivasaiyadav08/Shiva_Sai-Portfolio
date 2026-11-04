@@ -3,16 +3,20 @@ import { SKILL_GROUPS, EDUCATION, CERTIFICATIONS } from "@/data/profile";
 import ExperienceSection from "@/components/sections/experience";
 import Image from "next/image";
 import { Mail, Phone, Linkedin, Github, FileDown } from "lucide-react";
+import { pageMetadata, profileSchema } from "@/lib/seo";
 
 const profileLinkStyle =
   "inline-flex h-11 items-center justify-center rounded-xl border border-border bg-card/80 text-foreground transition-colors hover:border-violet-400/60 hover:bg-violet-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
-export const metadata = {
-  title: "About | Shiva Sai Thota",
-  description: config.description.long,
-};
+export const metadata = pageMetadata("/about");
 export default function AboutPage() {
   return (
     <main className="max-w-5xl mx-auto px-6 pt-32 pb-20 font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(profileSchema).replace(/</g, "\\u003c"),
+        }}
+      />
       <div className="flex flex-col md:flex-row gap-8 md:items-center mb-12">
         <div className="w-40 shrink-0 rounded-[28px] border border-violet-400/30 bg-gradient-to-br from-violet-500/20 to-cyan-500/10 p-1.5 shadow-lg shadow-violet-500/5">
           <Image
