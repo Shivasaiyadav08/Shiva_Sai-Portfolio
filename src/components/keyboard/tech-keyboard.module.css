@@ -233,7 +233,11 @@
   }
 }
 @media (max-width: 767px) {
+  .stage {
+    pointer-events: none;
+  }
   .soundToggle {
+    pointer-events: auto;
     position: absolute;
     right: var(--keyboard-controls-right, 0px);
     top: 0;
@@ -250,6 +254,7 @@
     transform: none;
   }
   .full .keys {
+    pointer-events: auto;
     grid-template-columns: repeat(var(--mobile-key-columns), minmax(0, 1fr));
     gap: 9px;
     padding: 8px;

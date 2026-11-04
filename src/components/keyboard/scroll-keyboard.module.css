@@ -20,3 +20,8 @@
 .floating[data-interactive="false"] button {
   visibility: hidden;
 }
+@media (max-width: 767px) {
+  .floating {
+    pointer-events: none;
+  }
+}

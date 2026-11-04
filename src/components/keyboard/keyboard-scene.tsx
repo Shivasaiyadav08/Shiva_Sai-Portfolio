@@ -8,6 +8,7 @@ import { FontLoader, type Font } from "three/addons/loaders/FontLoader.js";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import type { KeyboardMotion } from "./types";
 import { bindKeyboardPointers } from "./pointer-input";
+import { keyboardHitArea } from "./keyboard-hit-area";
 import {
   KEYBOARD_COLUMNS,
   KEYBOARD_MOBILE_COLUMNS,
@@ -135,10 +136,16 @@ export default function KeyboardScene({
     renderer.domElement.dataset.sceneInstance = crypto.randomUUID();
     renderer.domElement.dataset.keyCount = String(KEYBOARD_STACK.length);
     host.appendChild(renderer.domElement);
+    // Keep rendering separate from touch hit testing so empty space can scroll.
+    const inputSurface = document.createElement("div");
+    inputSurface.className = styles.inputSurface;
+    inputSurface.dataset.keyboardInput = "";
+    inputSurface.setAttribute("aria-hidden", "true");
+    host.appendChild(inputSurface);
 
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-8, 8, 5, -5, 0.1, 100);
-    const controls = new OrbitControls(camera, renderer.domElement);
+    const controls = new OrbitControls(camera, inputSurface);
     controls.enablePan = false;
     controls.enableZoom = false;
     const reduceMotion = window.matchMedia(
@@ -416,6 +423,17 @@ export default function KeyboardScene({
       }
       const orbiting = controls.update();
       frameModel();
+      if (window.innerWidth < 768)
+        inputSurface.style.setProperty(
+          "--keyboard-hit-area",
+          keyboardHitArea(
+            boardWidth,
+            boardDepth,
+            1.1 + lift * 2.5,
+            model.matrixWorld,
+            camera,
+          ),
+        );
       renderer.render(scene, camera);
       // Only hand off from the intro once the textured keyboard has actually painted.
       if (labelsReady && !reportedReady) {
@@ -504,7 +522,7 @@ export default function KeyboardScene({
       )[0]?.object.userData.skillId as string | undefined;
     };
     const unbindPointers = bindKeyboardPointers({
-      target: renderer.domElement,
+      target: inputSurface,
       hitTest: (event) => hitKey(event) || null,
       onKeyChange: (id) => {
         pressed = id;
@@ -645,6 +663,7 @@ export default function KeyboardScene({
       labelTextures.forEach((texture) => texture.dispose());
       light.shadow.map?.dispose();
       renderer.dispose();
+      inputSurface.remove();
       renderer.domElement.remove();
     };
   }, [motion, onSelect, onPress, onReady]);
