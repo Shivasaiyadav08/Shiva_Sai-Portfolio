@@ -32,8 +32,8 @@ src/
   lib/                    Formspree submission and class-name utility
 public/
   assets/                 Photo, logos, font, keyboard sounds, and artwork sources
-  Shiva-Sai-Resume.pdf     Resume download
-  icon.svg                Site icon
+  Shiva_Sai_Software_Engineer.pdf  Resume download
+  terminal.svg            Terminal-style site icon
 scripts/                  Source, asset, dependency, page, and keyboard checks
 tests/                    Contact submission, keyboard pointer, and audio tests
 ```
@@ -54,7 +54,7 @@ The `app` files assemble pages. Components render the interface, `data` holds co
 | Technology logos and key colors                      | `src/data/stack-artwork.ts`                 |
 | Photo                                                | `public/assets/profile/shiva-sai-thota.png` |
 | Project screenshots                                  | `src/assets/projects/`                      |
-| Resume                                               | `public/Shiva-Sai-Resume.pdf`               |
+| Resume                                               | `public/Shiva_Sai_Software_Engineer.pdf`    |
 
 Crebry, Edith, and Decentralized Stablecoin are Personal projects. Bhagyashree Ventures and GreenCost are Freelancing projects. All five use screenshots of the supplied websites.
 

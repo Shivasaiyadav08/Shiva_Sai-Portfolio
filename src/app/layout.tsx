@@ -13,7 +13,9 @@ export const metadata: Metadata = {
   description: config.description.long,
   keywords: config.keywords,
   authors: [{ name: config.author }],
-  icons: { icon: "/icon.svg" },
+  icons: {
+    icon: { url: "/terminal.svg", type: "image/svg+xml", sizes: "any" },
+  },
   openGraph: {
     title: config.title,
     description: config.description.short,

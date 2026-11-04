@@ -26,7 +26,7 @@ const config = {
   email: "shivasaiyadav0803@gmail.com",
   phone: "+91 6302872442",
   phoneHref: "tel:+916302872442",
-  resume: "/Shiva-Sai-Resume.pdf",
+  resume: "/Shiva_Sai_Software_Engineer.pdf",
   site: process.env.NEXT_PUBLIC_SITE_URL || "",
   social: {
     linkedin: "https://www.linkedin.com/in/shivasai-yadav",

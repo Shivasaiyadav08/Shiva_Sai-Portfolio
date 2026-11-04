@@ -58,7 +58,7 @@ for (const path of [
   assert.equal((await fetch(new URL(path, origin))).status, 404, path);
   console.log(`PASS ${path}: proper 404`);
 }
-const pdf = await fetch(new URL("/Shiva-Sai-Resume.pdf", origin));
+const pdf = await fetch(new URL("/Shiva_Sai_Software_Engineer.pdf", origin));
 assert.equal(pdf.status, 200);
 assert.ok(
   Buffer.from(await pdf.arrayBuffer())
@@ -66,7 +66,7 @@ assert.ok(
     .equals(Buffer.from("%PDF")),
 );
 console.log("PASS resume download: PDF file");
-for (const path of [...projectCovers, "/icon.svg"]) {
+for (const path of [...projectCovers, "/terminal.svg"]) {
   const image = await fetch(new URL(path, origin));
   assert.equal(image.status, 200, path);
   if (path.endsWith(".webp")) {

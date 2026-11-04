@@ -139,7 +139,7 @@ for (const name of Object.keys(manifest.devDependencies)) {
 const referencedAssets = new Set();
 for (const file of [...modules, ...stylesheets]) {
   for (const match of read(file).matchAll(
-    /["'`](\/(?:assets\/[^"'`$]+|icon\.svg|Shiva-Sai-Resume\.pdf))["'`]/g,
+    /["'`](\/(?:assets\/[^"'`$]+|terminal\.svg|[^/"'`$]+\.pdf))["'`]/g,
   ))
     referencedAssets.add(match[1].slice(1));
 }
