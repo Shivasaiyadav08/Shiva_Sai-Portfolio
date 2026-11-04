@@ -13,6 +13,15 @@
   width: 100%;
   height: 100%;
 }
+.preparing {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+  pointer-events: none;
+}
 .floating[data-interactive="false"],
 .floating[data-interactive="false"] * {
   pointer-events: none !important;

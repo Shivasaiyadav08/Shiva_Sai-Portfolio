@@ -126,7 +126,9 @@ for (const [path, expected] of [
   }
   if (path === "/" || path === "/projects") {
     const covers = [
-      ...html.matchAll(/src="(\/_next\/static\/media\/[^"?]+\.webp)"/g),
+      ...html.matchAll(
+        /src="(\/_next\/static\/media\/[^"?]+\.webp(?:\?[^\"]*)?)"/g,
+      ),
     ];
     assert.equal(
       new Set(covers.map((match) => match[1])).size,
@@ -213,7 +215,7 @@ console.log("PASS resume download: PDF file");
 for (const path of [...projectCovers, "/terminal.svg"]) {
   const image = await fetch(new URL(path, origin));
   assert.equal(image.status, 200, path);
-  if (path.endsWith(".webp")) {
+  if (new URL(path, origin).pathname.endsWith(".webp")) {
     assert.match(image.headers.get("content-type") || "", /image\/webp/);
     assert.ok((await image.arrayBuffer()).byteLength > 100, path);
   }

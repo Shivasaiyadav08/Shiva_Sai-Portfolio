@@ -38,9 +38,11 @@ type Key = {
 
 async function makeLabel(tool: (typeof KEYBOARD_STACK)[number]) {
   const canvas = document.createElement("canvas");
-  canvas.width = canvas.height = 512;
+  canvas.width = canvas.height = 256;
   const context = canvas.getContext("2d");
   if (!context) throw new Error("Canvas labels unavailable");
+  // Keep the same logical artwork coordinates with a quarter of the texture pixels.
+  context.scale(0.5, 0.5);
   let hasLogo = false;
   if (tool.logo) {
     const image = new Image();
@@ -163,7 +165,8 @@ export default function KeyboardScene({
     const light = new THREE.DirectionalLight(0xffffff, 3.0);
     light.position.set(-6, 14, 8);
     light.castShadow = true;
-    light.shadow.mapSize.set(2048, 2048);
+    const shadowSize = window.innerWidth < 768 ? 1024 : 2048;
+    light.shadow.mapSize.set(shadowSize, shadowSize);
     light.shadow.camera.left = light.shadow.camera.bottom = -12;
     light.shadow.camera.right = light.shadow.camera.top = 12;
     light.shadow.camera.near = 1;
@@ -435,7 +438,7 @@ export default function KeyboardScene({
           ),
         );
       renderer.render(scene, camera);
-      // Only hand off from the intro once the textured keyboard has actually painted.
+      // Start the keyboard's entrance only after its first complete frame.
       if (labelsReady && !reportedReady) {
         reportedReady = true;
         onReady(true);
@@ -448,8 +451,8 @@ export default function KeyboardScene({
       if (moving || orbiting) invalidate();
     };
     const invalidate = () => {
-      // Prepare one complete frame even below the fold so mobile loading can finish.
-      if (!frame && !disposed && (visible || !reportedReady))
+      // Prepare the first complete frame even when the keyboard is below the fold.
+      if (labelsReady && !frame && !disposed && (visible || !reportedReady))
         frame = requestAnimationFrame(tick);
     };
     scrollMotion.invalidate = invalidate;
@@ -617,13 +620,16 @@ export default function KeyboardScene({
         face.rotation.x = -Math.PI / 2;
         face.position.y = 0.405;
         keys[index].group.add(face);
-        invalidate();
       }),
     )
-      .then(() => {
+      .then(async () => {
         if (!disposed) {
-          labelsReady = true;
-          invalidate();
+          // Compile shaders before the entrance; don't render hidden partial labels.
+          await renderer.compileAsync(scene, camera);
+          if (!disposed) {
+            labelsReady = true;
+            invalidate();
+          }
         }
       })
       .catch(() => {

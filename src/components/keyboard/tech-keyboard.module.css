@@ -41,13 +41,6 @@
   visibility: hidden;
   pointer-events: none;
 }
-.scenePlaceholder {
-  display: grid;
-  place-items: center;
-  height: var(--keyboard-height, clamp(420px, 56vw, 730px));
-  color: hsl(var(--muted-foreground));
-  font-size: 13px;
-}
 .accessibleKeys {
   position: absolute !important;
   width: 1px;
@@ -86,8 +79,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-}
-.topBar {
   padding: 0 3px 18px;
 }
 .brand {
@@ -190,10 +181,6 @@
   display: grid;
   place-items: center;
   color: var(--key-color);
-}
-.keyIcon svg {
-  width: 25px;
-  height: 25px;
 }
 .keyLabel {
   max-width: 100%;

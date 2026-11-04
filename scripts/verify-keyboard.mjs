@@ -126,13 +126,17 @@ assert.ok(
 console.log(
   `PASS: all ${expected.length} technologies and tools appear exactly once on the shared keyboard, with no concept or template keys.`,
 );
+const artwork = await readFile(
+  new URL("../src/data/stack-artwork.ts", import.meta.url),
+  "utf8",
+);
 const assetPaths = [
   "/assets/keycap-sounds/press.mp3",
   "/assets/keycap-sounds/release.mp3",
   ...new Set(
-    [
-      ...html.matchAll(/src="(\/assets\/(?:stack|keycap-sounds)\/[^"?]+)"/g),
-    ].map((match) => match[1]),
+    [...artwork.matchAll(/file:\s*"([^"]+)"/g)].map(
+      (match) => `/assets/stack/${match[1]}`,
+    ),
   ),
 ];
 assert.ok(assetPaths.length >= 45, "Real logo and sound assets must be served");

@@ -27,6 +27,10 @@ export function ProjectGrid({
   const visible = projects.filter(
     (project) => filter === "all" || project.kind === filter,
   );
+  const coverSizes =
+    visible.length === 2
+      ? "(max-width: 640px) calc(100vw - 64px), (max-width: 1280px) calc((100vw - 120px) / 2), 600px"
+      : "(max-width: 640px) calc(100vw - 64px), (max-width: 1100px) calc((100vw - 120px) / 2), (max-width: 1280px) calc((100vw - 160px) / 3), 384px";
 
   return (
     <div className={styles.collection}>
@@ -75,6 +79,7 @@ export function ProjectGrid({
           <ProjectCard
             key={project.id}
             project={project}
+            coverSizes={coverSizes}
             eagerImage={eagerFirstImage && index === 0}
           />
         ))}
@@ -88,13 +93,21 @@ export function ProjectGrid({
 
 function ProjectCard({
   project,
+  coverSizes,
   eagerImage,
 }: {
   project: Project;
+  coverSizes: string;
   eagerImage: boolean;
 }) {
   const accent = { "--project-accent": project.accent } as CSSProperties;
   const tags = project.stack;
+  // Responsive immutable files, with no first-visit server conversion work.
+  const imageLoader = ({ width }: { width: number }) => {
+    const image =
+      width <= project.preview.width ? project.preview : project.src;
+    return `${image.src}?w=${image.width}`;
+  };
   return (
     <Dialog.Root>
       <article
@@ -107,9 +120,11 @@ function ProjectCard({
           <Image
             src={project.src}
             alt={project.imageAlt}
-            unoptimized
+            loader={imageLoader}
+            sizes={coverSizes}
             placeholder="blur"
             loading={eagerImage ? "eager" : "lazy"}
+            fetchPriority={eagerImage ? "high" : undefined}
             className={styles.cover}
           />
           <span className={styles.previewHint}>
@@ -160,7 +175,8 @@ function ProjectCard({
             <Image
               src={project.src}
               alt={project.imageAlt}
-              unoptimized
+              loader={imageLoader}
+              sizes="(max-width: 768px) calc(100vw - 72px), 792px"
               placeholder="blur"
               loading="eager"
             />

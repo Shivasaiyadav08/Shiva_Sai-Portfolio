@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { motion as Motion, useReducedMotion } from "framer-motion";
 import TechKeyboard from "./tech-keyboard";
@@ -12,6 +12,9 @@ import type { KeyboardMotion } from "./types";
 // A single scene travels between sections, retaining selection, sound and GPU resources.
 export default function ScrollKeyboard() {
   const { isLoading } = usePreloader();
+  const [sceneSettled, setSceneSettled] = useState(false);
+  const handleSceneSettled = useCallback(() => setSceneSettled(true), []);
+  const waiting = isLoading || !sceneSettled;
   const reduceMotion = useReducedMotion();
   const layerRef = useRef<HTMLDivElement>(null);
   const motion = useRef<KeyboardMotion>({
@@ -272,23 +275,28 @@ export default function ScrollKeyboard() {
       data-scroll-keyboard
       data-section="hero"
     >
+      {!isLoading && !sceneSettled && (
+        <div className={styles.preparing} role="status">
+          Preparing the 3D keyboard…
+        </div>
+      )}
       <Motion.div
         className={styles.entrance}
         style={{ willChange: "transform, opacity" }}
         initial={{ opacity: 0, y: 36, scale: 0.94 }}
         animate={{
-          opacity: isLoading ? 0 : 1,
-          y: isLoading && !reduceMotion ? 36 : 0,
-          scale: isLoading && !reduceMotion ? 0.94 : 1,
+          opacity: waiting ? 0 : 1,
+          y: waiting && !reduceMotion ? 36 : 0,
+          scale: waiting && !reduceMotion ? 0.94 : 1,
         }}
         transition={{
           duration: reduceMotion ? 0.15 : 1.15,
-          delay: isLoading || reduceMotion ? 0 : 0.3,
+          delay: waiting || reduceMotion ? 0 : 0.3,
           ease: [0.22, 1, 0.36, 1],
         }}
-        data-keyboard-entrance={isLoading ? "waiting" : "ready"}
+        data-keyboard-entrance={waiting ? "waiting" : "ready"}
       >
-        <TechKeyboard motion={motion} />
+        <TechKeyboard motion={motion} onSettled={handleSceneSettled} />
       </Motion.div>
     </div>
   );

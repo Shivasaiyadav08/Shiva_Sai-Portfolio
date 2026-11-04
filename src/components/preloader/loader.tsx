@@ -97,8 +97,8 @@ export default function Loader({
       });
     };
 
-    // Font metrics must be settled before revealing the large headline.
-    void document.fonts.ready.then(start, start);
+    // Next/font supplies metric-adjusted fallbacks; don't wait for every page font.
+    start();
     return () => {
       cancelled = true;
       cancelAnimationFrame(frame);

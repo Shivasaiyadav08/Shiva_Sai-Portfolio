@@ -9,7 +9,6 @@ import {
   type RefObject,
 } from "react";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 import {
   KEYBOARD_COLUMNS,
   KEYBOARD_MOBILE_COLUMNS,
@@ -20,33 +19,46 @@ import type { KeyboardMotion } from "./types";
 import { usePreloader } from "../preloader/context";
 import { bindKeyboardPointers } from "./pointer-input";
 import { createKeyboardSound } from "./keyboard-sound";
-const KeyboardScene = dynamic(() => import("./keyboard-scene"), { ssr: false });
+type SceneComponent = typeof import("./keyboard-scene").default;
 
 export default function TechKeyboard({
   motion,
+  onSettled,
 }: {
   motion: RefObject<KeyboardMotion>;
+  onSettled: () => void;
 }) {
-  const { canInitializeScene, registerScene } = usePreloader();
+  const { isLoading } = usePreloader();
+  const [KeyboardScene, setKeyboardScene] = useState<SceneComponent | null>(
+    null,
+  );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [pressedId, setPressedId] = useState<string | null>(null);
   const [sceneStatus, setSceneStatus] = useState<
     "loading" | "ready" | "failed"
   >("loading");
   const sceneReady = sceneStatus === "ready";
-  const completeScene = useRef<(() => void) | null>(null);
+  const handleSceneReady = useCallback(
+    (ready: boolean) => {
+      setSceneStatus(ready ? "ready" : "failed");
+      onSettled();
+    },
+    [onSettled],
+  );
   useEffect(() => {
-    const complete = registerScene();
-    completeScene.current = complete;
+    let active = true;
+    // Fetch the optional chunk during the intro; defer GPU work until it exits.
+    void import("./keyboard-scene")
+      .then((module) => {
+        if (active) setKeyboardScene(() => module.default);
+      })
+      .catch(() => {
+        if (active) handleSceneReady(false);
+      });
     return () => {
-      complete();
-      completeScene.current = null;
+      active = false;
     };
-  }, [registerScene]);
-  const handleSceneReady = useCallback((ready: boolean) => {
-    setSceneStatus(ready ? "ready" : "failed");
-    completeScene.current?.();
-  }, []);
+  }, [handleSceneReady]);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [audioReady, setAudioReady] = useState(false);
   const soundEnabledRef = useRef(true);
@@ -149,13 +161,8 @@ export default function TechKeyboard({
             : "♪ Enable sound"
           : "♪ Sound off"}
       </button>
-      {sceneStatus === "loading" && (
-        <div className={styles.scenePlaceholder} role="status">
-          <span>Preparing the 3D keyboard…</span>
-        </div>
-      )}
       <div className={sceneReady ? styles.liveScene : styles.loadingScene}>
-        {canInitializeScene && (
+        {!isLoading && KeyboardScene && (
           <KeyboardScene
             motion={motion}
             selectedId={selectedId}
@@ -223,14 +230,16 @@ export default function TechKeyboard({
                 >
                   <span className={styles.keyIcon} aria-hidden="true">
                     {skill.logo ? (
-                      <Image
-                        src={skill.logo}
-                        width={64}
-                        height={64}
-                        alt=""
-                        loading="eager"
-                        unoptimized
-                      />
+                      sceneStatus === "failed" ? (
+                        <Image
+                          src={skill.logo}
+                          width={64}
+                          height={64}
+                          alt=""
+                          loading="eager"
+                          unoptimized
+                        />
+                      ) : null
                     ) : (
                       <span className={styles.wordmark}>pgvector</span>
                     )}

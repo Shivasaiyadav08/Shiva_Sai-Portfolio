@@ -4,6 +4,11 @@ import edithCover from "@/assets/projects/edith.webp";
 import stablecoinCover from "@/assets/projects/stablecoin.webp";
 import bhagyashreeCover from "@/assets/projects/bhagyashree-ventures.webp";
 import greencostCover from "@/assets/projects/greencost.webp";
+import crebryPreview from "@/assets/projects/previews/crebry.webp";
+import edithPreview from "@/assets/projects/previews/edith.webp";
+import stablecoinPreview from "@/assets/projects/previews/stablecoin.webp";
+import bhagyashreePreview from "@/assets/projects/previews/bhagyashree-ventures.webp";
+import greencostPreview from "@/assets/projects/previews/greencost.webp";
 
 export type Project = {
   id: string;
@@ -13,6 +18,7 @@ export type Project = {
   title: string;
   subtitle: string;
   src: StaticImageData;
+  preview: StaticImageData;
   imageAlt: string;
   summary: string;
   stack: string[];
@@ -49,6 +55,7 @@ const projects: Project[] = [
     live: "https://crebry-research-agent.vercel.app/",
     github: "https://github.com/Shivasaiyadav08/Crebry-ResearchAgent",
     src: crebryCover,
+    preview: crebryPreview,
     imageAlt: "Crebry homepage showing its evidence-backed research workspace",
   },
   {
@@ -77,6 +84,7 @@ const projects: Project[] = [
     live: "https://edith-ai-powered-manager.vercel.app/",
     github: "https://github.com/Shivasaiyadav08/Edith",
     src: edithCover,
+    preview: edithPreview,
     imageAlt:
       "Edith homepage showing projects, tasks and its Ultron AI assistant",
   },
@@ -110,6 +118,7 @@ const projects: Project[] = [
     github: "https://github.com/Shivasaiyadav08/Stable-Coin-frontend",
     contractGithub: "https://github.com/Shivasaiyadav08/Stable-Coin",
     src: stablecoinCover,
+    preview: stablecoinPreview,
     imageAlt:
       "DSC Protocol homepage showing the stablecoin collateral mechanism",
   },
@@ -130,6 +139,7 @@ const projects: Project[] = [
     ],
     live: "https://bvhardwares.in/",
     src: bhagyashreeCover,
+    preview: bhagyashreePreview,
     imageAlt:
       "Bhagyashree Ventures homepage showing labeling products and barcode hardware",
   },
@@ -159,6 +169,7 @@ const projects: Project[] = [
     ],
     live: "https://green-cost-sydney.vercel.app/",
     src: greencostCover,
+    preview: greencostPreview,
     imageAlt:
       "GreenCost homepage showing building cost comparison and an interactive house model",
   },
